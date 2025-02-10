@@ -1,0 +1,80 @@
+/* 答案容器选择器需要根据实际页面结构调整 */
+.answer-container {
+  letter-spacing: 0.5px !important;
+  line-height: 1.4 !important;
+  color: #333 !important;
+  font-size: 14px !important;
+  padding: 12px !important;
+}
+
+*{
+  --ds-md-zoom: 0.9 !important;
+}
+.ds-markdown h1, .ds-markdown h2, .ds-markdown h3, .ds-markdown h4, .ds-markdown h5, .ds-markdown h6{
+  margin: 2px 0 !important;
+}
+#root {
+  background: rebeccapurple;
+  --ds-font-size-m: 12px;
+
+  /*font-size: 12px;*/
+
+  p {
+    line-height: 18px;
+    margin: 0 !important;
+  }
+
+
+  /*.ds-markdown{*/
+  /*  --ds-md-zoom: 0.9;*/
+  /*}*/
+  /*.ds-markdown hr{*/
+  /*  display: none;*/
+  /*}*/
+  /*.ds-markdown li:not(:first-child){*/
+  /*  margin-top: 0;*/
+  /*}*/
+  /*.ds-markdown li>ul,.ds-markdown li>ol {*/
+  /*  margin-top: 0;*/
+  /*}*/
+  .ds-markdown ul, .ds-markdown ol {
+    margin: 0 0 2px;
+  }
+  /*.ds-markdown h3{*/
+  /*  line-height: 1;*/
+  /*  margin: 2px 0;*/
+  /*  font-size: 14px;*/
+  /*}*/
+  /*.ds-markdown td {*/
+  /*  padding: 0 4px;*/
+  /*  font-size: 12px;*/
+  /*}*/
+
+}
+
+body, page, .ds-theme {
+  --ds-input-height-l: 42px;
+  --ds-input-height-m: 34px;
+  --ds-input-height-s: 30px;
+  --ds-input-height-xs: 26px;
+  --ds-font-weight-strong: 600;
+  --ds-font-size-l: 16px;
+  --ds-line-height-l: 28px;
+  --ds-font-size-m: 12px;
+  --ds-line-height-m: 25px;
+  --ds-font-size-sp: 13px;
+  --ds-line-height-sp: 23px;
+  --ds-font-size-s: 12px;
+  --ds-line-height-s: 21px;
+  --ds-font-size-xsp: 11px;
+  --ds-line-height-xsp: 16px;
+  --ds-font-size-xs: 10px;
+  --ds-line-height-xs: 18px;
+  --ds-ease-in-out: cubic-bezier(.4,0,.2,1);
+  --ds-ease-in: cubic-bezier(.4,0,1,1);
+  --ds-ease-out: cubic-bezier(0,0,.2,1);
+  --ds-font-family-code: Menlo, "Roboto Mono", "Courier New", Courier, monospace, "Inter", sans-serif;
+  --ds-transition-duration: .2s;
+  --ds-transition-duration-fast: .1s;
+  --ds-transition-duration-slow: .3s;
+}

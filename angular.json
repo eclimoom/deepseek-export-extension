@@ -27,7 +27,9 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/chrome_extension",
+              "src/manifest.json"
             ],
             "styles": [
               "src/styles.scss"
@@ -90,7 +92,9 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/chrome_extension",
+              "src/manifest.json"
             ],
             "styles": [
               "src/styles.scss"
@@ -100,5 +104,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
