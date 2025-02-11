@@ -37,7 +37,8 @@ function addExportBtn() {
 
 
   const exportBtn = document.createElement('button');
-  exportBtn.textContent = '导出PDF';
+  // exportBtn.textContent = '导出PDF';
+  exportBtn.textContent = '导出图片';
   exportBtn.style.position = 'absolute';
   exportBtn.style.right = 'calc(100% + 77px)';
 
