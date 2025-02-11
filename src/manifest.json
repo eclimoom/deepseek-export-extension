@@ -6,9 +6,6 @@
   "content_scripts": [{
     "matches": ["*://*.deepseek.com/*"],
     "css": ["chrome_extension/content.css"],
-    "js": ["chrome_extension/content.js"]
-  }],
-  "background": {
-    "service_worker": "chrome_extension/background.js"
-  }
+    "js": ["chrome_extension/html2canvas.min.js", "chrome_extension/pdf-lib.min.js","chrome_extension/content.js"]
+  }]
 }

@@ -8,7 +8,7 @@
 }
 
 *{
-  --ds-md-zoom: 0.9 !important;
+  --ds-md-zoom: 0.95 !important;
 }
 .ds-markdown h1, .ds-markdown h2, .ds-markdown h3, .ds-markdown h4, .ds-markdown h5, .ds-markdown h6{
   margin: 2px 0 !important;
@@ -16,6 +16,7 @@
 #root {
   background: rebeccapurple;
   --ds-font-size-m: 12px;
+  --message-list-max-width: 900px;
 
   /*font-size: 12px;*/
 
@@ -23,7 +24,29 @@
     line-height: 18px;
     margin: 0 !important;
   }
+  /*todo 暂时方案 */
+  .fa81{
+    padding-bottom: 0;
+    margin-bottom: 4px;
+    font-size: 12px;
+    &>div{
+      padding: 2px 10px;
+      font-size: 12px;
+    }
+  }
+  .ds-markdown hr{
+    margin: 0;
+    /*visibility: hidden;*/
+    display: none;
+  }
 
+  .ds-markdown li:not(:first-child){
+    margin-top: 0;
+  }
+
+  .ds-markdown li::marker {
+    line-height: 18px;
+  }
 
   /*.ds-markdown{*/
   /*  --ds-md-zoom: 0.9;*/
@@ -31,24 +54,22 @@
   /*.ds-markdown hr{*/
   /*  display: none;*/
   /*}*/
-  /*.ds-markdown li:not(:first-child){*/
-  /*  margin-top: 0;*/
-  /*}*/
   /*.ds-markdown li>ul,.ds-markdown li>ol {*/
   /*  margin-top: 0;*/
   /*}*/
   .ds-markdown ul, .ds-markdown ol {
     margin: 0 0 2px;
   }
-  /*.ds-markdown h3{*/
+  .ds-markdown h3{
+    font-size: calc(var(--ds-md-zoom)* 14px);
   /*  line-height: 1;*/
   /*  margin: 2px 0;*/
   /*  font-size: 14px;*/
-  /*}*/
-  /*.ds-markdown td {*/
-  /*  padding: 0 4px;*/
-  /*  font-size: 12px;*/
-  /*}*/
+  }
+  .ds-markdown th, .ds-markdown td {
+    padding: 0 4px;
+    font-size: 12px;
+  }
 
 }
 

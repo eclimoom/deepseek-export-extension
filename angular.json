@@ -29,7 +29,8 @@
               "src/favicon.ico",
               "src/assets",
               "src/chrome_extension",
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/background.js"
             ],
             "styles": [
               "src/styles.scss"
@@ -94,7 +95,8 @@
               "src/favicon.ico",
               "src/assets",
               "src/chrome_extension",
-              "src/manifest.json"
+              "src/manifest.json",
+              "src/background.js"
             ],
             "styles": [
               "src/styles.scss"
