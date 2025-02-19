@@ -16,7 +16,7 @@ function applyStyleModifications() {
 
 timer = setTimeout(() => {
   addExportBtn();
-}, 1000);
+}, 500);
 
 observer.observe(document.body, {
   childList: true,
@@ -27,7 +27,7 @@ observer.observe(document.body, {
 // setTimeout(() => {
 //
 // }, 1000);
-
+const downImgSvg = '<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m6.00002 21.5999 10.19998-9.6 4.8 4.8m-14.99998 4.8h11.99998c1.9882 0 3.6-1.6118 3.6-3.6v-6m-15.59998 9.6c-1.98822 0-3.6-1.6118-3.6-3.6v-12c0-1.98822 1.61178-3.6 3.6-3.6h7.79998m7.8 3.55743-2.4542 2.44257m0 0-2.3458-2.33216m2.3458 2.33216v-6m-9.54578 5.4c0 .99411-.80588 1.8-1.8 1.8-.99411 0-1.8-.80589-1.8-1.8s.80589-1.8 1.8-1.8c.99412 0 1.8.80589 1.8 1.8z" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>'
 // add btn
 function addExportBtn() {
 
@@ -38,17 +38,13 @@ function addExportBtn() {
   });
 
 
+
   const exportBtn = document.createElement('button');
   // exportBtn.textContent = '导出PDF';
-  exportBtn.textContent = '导出图片';
-  exportBtn.style.position = 'absolute';
-  exportBtn.style.right = 'calc(100% + 77px)';
+  exportBtn.className = 'ds-moom-btn ds-export-moom-btn export-pdf'
+  exportBtn.innerHTML = downImgSvg + '导出';
 
-  exportBtn.style.top = '4px';
-  exportBtn.style.width = '64px';
-  exportBtn.style.fontSize = '12px';
-  exportBtn.style.right = '-68px';
-  exportBtn.classList.add('export-pdf');
+
 
 
   // 插入导出按钮
@@ -215,18 +211,42 @@ function addExportBtn() {
     link.click();
   }
 
-  loadCustomStyles()
+  // loadCustomStyles()
+  //
+  // function loadCustomStyles() {
+  //   // document.body.parentElement.classList.add('deep-min-moom');
+  //   document.body.classList.add('deep-min-moom');
+  // }
+  //
+  // function unloadCustomStyles() {
+  //   // const link = document.getElementById('custom-styles');
+  //   // if (link) {
+  //   //   link.parentNode.removeChild(link);
+  //   // }
+  //   document.body.classList.remove('deep-min-moom')
+  // }
+}
 
-  function loadCustomStyles() {
-    document.body.parentElement.classList.add('deep-min-moom');
+
+addZoomBtn();
+// 向页面中增加一个缩小文字的按钮
+function addZoomBtn() {
+  const zoomBtn = document.createElement('button');
+  zoomBtn.className = 'ds-zoom-moom ds-moom-btn';
+  zoomBtn.textContent = '缩小';
+
+  zoomBtn.addEventListener('click', handleZoom);
+  document.body.appendChild(zoomBtn);
+}
+
+function handleZoom() {
+  let isAdd = document.querySelector('.deep-min-moom');
+  let zoomBtn = document.querySelector('.ds-zoom-moom');
+  if (isAdd) {
+    document.body.classList.remove('deep-min-moom');
+    zoomBtn.textContent = '缩小';
+  } else {
     document.body.classList.add('deep-min-moom');
-  }
-
-  function unloadCustomStyles() {
-    // const link = document.getElementById('custom-styles');
-    // if (link) {
-    //   link.parentNode.removeChild(link);
-    // }
-    document.body.classList.remove('deep-min-moom')
+    zoomBtn.textContent = '恢复';
   }
 }
