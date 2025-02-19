@@ -5,6 +5,7 @@ const observer = new MutationObserver(mutations => {
 });
 
 let timer = null;
+
 function applyStyleModifications() {
   // 增加节流延迟1s执行
   clearTimeout(timer);
@@ -12,6 +13,7 @@ function applyStyleModifications() {
     addExportBtn();
   }, 1000);
 }
+
 timer = setTimeout(() => {
   addExportBtn();
 }, 1000);
@@ -52,7 +54,7 @@ function addExportBtn() {
   // 插入导出按钮
   btns.forEach(btn => {
     // copy exportBtn to btn
-    if(btn.parentElement.parentElement.querySelectorAll('.export-pdf').length > 0) {
+    if (btn.parentElement.parentElement.querySelectorAll('.export-pdf').length > 0) {
       return;
     }
     const expBtn = exportBtn.cloneNode(true);
@@ -61,24 +63,72 @@ function addExportBtn() {
   });
 
 // 点击事件处理
-  function handleClick(evt) {
+  async function handleClick(evt) {
     let title = evt.target.parentElement;
     let content = title.parentElement.nextElementSibling;
     content.lastChild.style.display = 'none';
 
+    try {
+      const titleCanvas = await html2canvas(title, {useCORS: true});
+      const imgData = titleCanvas.toDataURL('image/png');
+      await customStyle(content);
+      const contentCanvas = await html2canvas(content, {useCORS: true});
+      const contentData = contentCanvas.toDataURL('image/png');
 
-    // 获取 页面的 style 插入iframe
+      // 删除extension-styles
+      const style = document.getElementById('extension-styles');
+      if (style) {
+        style.parentNode.removeChild(style);
+      }
+      content.lastChild.style.display = 'block';
 
+      mergeImages(imgData, contentData, title.textContent);
+    } catch (error) {
+      console.error('Error capturing screenshots:', error);
+    }
+  }
 
-    html2canvas(title).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      html2canvas(content).then(canvas => {
-        content.lastChild.style.display = 'block';
-        const contentData = canvas.toDataURL('image/png');
-        mergeImages(imgData, contentData, title.textContent);
-      });
-    });
+  async function customStyle(dom) {
+    const style = document.createElement('style');
+    style.id = 'extension-styles';
+    style.rel = 'stylesheet';
+    style.style.opacity = '0';
+    style.style.height = '1px';
 
+    style.innerHTML = `
+.deep-min-moom * {
+  --ds-md-zoom: 0.95 !important;
+  --ds-font-size-m: 12px !important;
+  --ds-line-height-m: 16px !important;
+  .ds-markdown{
+    min-height: 16px !important;
+  }
+  .ds-markdown h3{
+    line-height: 1.3 !important;
+    font-size: calc(var(--ds-md-zoom) * 13px) !important;
+  }
+  .ds-markdown h1, .ds-markdown h2, .ds-markdown h3, .ds-markdown h4, .ds-markdown h5, .ds-markdown h6{
+    margin: 4px 0 !important;
+  }
+    .ds-markdown ul, .ds-markdown ol {
+      margin: 2px 0 2px !important;
+    }
+  .ds-markdown p{
+    margin: calc(var(--ds-md-zoom)*2px)0 !important;
+  }
+    /*todo 暂时方案 */
+    .fa81{
+      padding-bottom: 0 !important;
+      margin-bottom: 4px !important;
+      font-size: 12px !important;
+      &>div{
+        padding: 2px 10px !important;
+        font-size: 12px !important;
+      }
+    }
+}
+`;
+    dom.appendChild(style);
   }
 
   function mergeImages(titleImgData, contentImgData, title) {
@@ -93,13 +143,15 @@ function addExportBtn() {
 
     titleImg.onload = () => {
       contentImg.onload = () => {
-        canvas.width = Math.max(titleImg.width, contentImg.width);
-        canvas.height = titleImg.height + contentImg.height;
-
+        let padding = 10;
+        canvas.width = Math.max(titleImg.width, contentImg.width) + padding * 2;
+        canvas.height = titleImg.height + contentImg.height + padding * 2;
         // ctx 增加背景色
         ctx.fillStyle = 'white';
-        ctx.drawImage(titleImg, canvas.width - titleImg.width, 0);
-        ctx.drawImage(contentImg, 0, titleImg.height);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.drawImage(titleImg, canvas.width - titleImg.width * 0.8 - padding, padding / 2, titleImg.width * 0.8, titleImg.height * 0.8);
+        ctx.drawImage(contentImg, padding, titleImg.height);
 
 
         const mergedImgData = canvas.toDataURL('image/png');
@@ -108,7 +160,7 @@ function addExportBtn() {
         // 保存图片 png 到下载
         const link = document.createElement('a');
         link.href = mergedImgData;
-        link.download = `deepseek_${title.slice(0,10)}.png`;
+        link.download = `deepseek_${title.slice(0, 10)}.png`;
         link.click();
 
       };
@@ -156,10 +208,25 @@ function addExportBtn() {
     }
 
     const mergedPdfBytes = await pdfDoc.save();
-    const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+    const blob = new Blob([mergedPdfBytes], {type: 'application/pdf'});
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `down.pdf`;
     link.click();
+  }
+
+  loadCustomStyles()
+
+  function loadCustomStyles() {
+    document.body.parentElement.classList.add('deep-min-moom');
+    document.body.classList.add('deep-min-moom');
+  }
+
+  function unloadCustomStyles() {
+    // const link = document.getElementById('custom-styles');
+    // if (link) {
+    //   link.parentNode.removeChild(link);
+    // }
+    document.body.classList.remove('deep-min-moom')
   }
 }
