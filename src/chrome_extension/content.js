@@ -65,10 +65,10 @@ function addExportBtn() {
     content.lastChild.style.display = 'none';
 
     try {
-      const titleCanvas = await html2canvas(title, {useCORS: true});
+      const titleCanvas = await html2canvas(title, {useCORS: true, ignoreElements: (element) => element.classList.contains('export-pdf')});
       const imgData = titleCanvas.toDataURL('image/png');
       await customStyle(content);
-      const contentCanvas = await html2canvas(content, {useCORS: true});
+      const contentCanvas = await html2canvas(content, {useCORS: true, });
       const contentData = contentCanvas.toDataURL('image/png');
 
       // 删除extension-styles
