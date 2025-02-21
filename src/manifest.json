@@ -1,10 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "DeepSeek截图工具",
-  "version": "1.0",
-  "permissions": ["activeTab", "scripting", "downloads"],
+  "name": "DeepSeek导出图片",
+  "description": "DeepSeek,DeepSeek截图, DeepSeek缩放字号,保存为图片",
+  "version": "1.0.1",
+  "permissions": ["activeTab", "scripting"],
   "content_scripts": [{
-    "matches": ["*://chat.deepseek.com/*"],
+    "matches": ["https://chat.deepseek.com/*"],
     "css": ["chrome_extension/content.css"],
     "js": ["chrome_extension/html2canvas.min.js", "chrome_extension/pdf-lib.min.js","chrome_extension/content.js"]
   }],
