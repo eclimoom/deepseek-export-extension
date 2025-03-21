@@ -163,7 +163,6 @@ function addExportBtn() {
 
     // 去除问题中的标点符号，去除常见疑问词（如“如何”）
     let keyPhrase = question.replace(/[，。？！,.?\s]/g, "").replace(/导出$/g, "");
-    console.log("keyPhrase", keyPhrase);
     for (const word of actionWords) {
       if (keyPhrase.startsWith(word)) {
         keyPhrase = keyPhrase.slice(word.length).trim();
