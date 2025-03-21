@@ -55,6 +55,9 @@
   padding: 0 4px;
   line-height: 22px;
   cursor: pointer;
+  &>*{
+    pointer-events: none;
+  }
 
   &:hover {
     color: #4D6BFE;

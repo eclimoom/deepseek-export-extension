@@ -28,6 +28,7 @@ observer.observe(document.body, {
 //
 // }, 1000);
 const downImgSvg = '<svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m6.00002 21.5999 10.19998-9.6 4.8 4.8m-14.99998 4.8h11.99998c1.9882 0 3.6-1.6118 3.6-3.6v-6m-15.59998 9.6c-1.98822 0-3.6-1.6118-3.6-3.6v-12c0-1.98822 1.61178-3.6 3.6-3.6h7.79998m7.8 3.55743-2.4542 2.44257m0 0-2.3458-2.33216m2.3458 2.33216v-6m-9.54578 5.4c0 .99411-.80588 1.8-1.8 1.8-.99411 0-1.8-.80589-1.8-1.8s.80589-1.8 1.8-1.8c.99412 0 1.8.80589 1.8 1.8z" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>'
+
 // add btn
 function addExportBtn() {
 
@@ -38,13 +39,10 @@ function addExportBtn() {
   });
 
 
-
   const exportBtn = document.createElement('button');
   // exportBtn.textContent = '导出PDF';
   exportBtn.className = 'ds-moom-btn ds-export-moom-btn export-pdf'
   exportBtn.innerHTML = downImgSvg + '导出';
-
-
 
 
   // 插入导出按钮
@@ -65,10 +63,19 @@ function addExportBtn() {
     content.lastChild.style.display = 'none';
 
     try {
-      const titleCanvas = await html2canvas(title, {useCORS: true, ignoreElements: (element) => element.classList.contains('export-pdf')});
+      const titleCanvas = await html2canvas(title, {
+        useCORS: true,
+        ignoreElements: (element) => element.classList.contains('export-pdf')
+      });
       const imgData = titleCanvas.toDataURL('image/png');
       await customStyle(content);
-      const contentCanvas = await html2canvas(content, {useCORS: true, });
+      // 获取body className
+      const bodyClass = document.body.className;
+      let backgroundColor = 'transparent';
+      if (bodyClass.includes('dark')) {
+        backgroundColor = '#292a2d';
+      }
+      const contentCanvas = await html2canvas(content, {useCORS: true, backgroundColor: backgroundColor});
       const contentData = contentCanvas.toDataURL('image/png');
 
       // 删除extension-styles
@@ -78,7 +85,8 @@ function addExportBtn() {
       }
       content.lastChild.style.display = 'block';
 
-      mergeImages(imgData, contentData, title.textContent);
+      const titleKey = extractKeyPoints(title.textContent).substring(0, 18);
+      mergeImages(imgData, contentData, titleKey);
     } catch (error) {
       console.error('Error capturing screenshots:', error);
     }
@@ -91,40 +99,94 @@ function addExportBtn() {
     style.style.opacity = '0';
     style.style.height = '1px';
 
-    style.innerHTML = `
-.deep-min-moom * {
-  --ds-md-zoom: 0.95 !important;
-  --ds-font-size-m: 12px !important;
-  --ds-line-height-m: 16px !important;
-  .ds-markdown{
-    min-height: 16px !important;
-  }
-  .ds-markdown h3{
-    line-height: 1.3 !important;
-    font-size: calc(var(--ds-md-zoom) * 13px) !important;
-  }
-  .ds-markdown h1, .ds-markdown h2, .ds-markdown h3, .ds-markdown h4, .ds-markdown h5, .ds-markdown h6{
-    margin: 4px 0 !important;
-  }
-    .ds-markdown ul, .ds-markdown ol {
-      margin: 2px 0 2px !important;
+    let styleStr = `
+    .deep-min-moom * {
+      --ds-md-zoom: 0.95 !important;
+      --ds-font-size-m: 12px !important;
+      --ds-line-height-m: 16px !important;
+      .ds-markdown{
+        min-height: 16px !important;
+      }
+      .ds-markdown h3{
+        line-height: 1.3 !important;
+        font-size: calc(var(--ds-md-zoom) * 13px) !important;
+      }
+      .ds-markdown h1, .ds-markdown h2, .ds-markdown h3, .ds-markdown h4, .ds-markdown h5, .ds-markdown h6{
+        margin: 4px 0 !important;
+      }
+        .ds-markdown ul, .ds-markdown ol {
+          margin: 2px 0 2px !important;
+        }
+      .ds-markdown p{
+        margin: calc(var(--ds-md-zoom)*2px)0 !important;
+      }
+        /*todo 暂时方案 */
+        .fa81{
+          padding-bottom: 0 !important;
+          margin-bottom: 4px !important;
+          font-size: 12px !important;
+          &>div{
+            padding: 2px 10px !important;
+            font-size: 12px !important;
+          }
+        }
     }
-  .ds-markdown p{
-    margin: calc(var(--ds-md-zoom)*2px)0 !important;
+    `;
+    style.innerHTML = styleStr;
+    dom.appendChild(style);
   }
-    /*todo 暂时方案 */
-    .fa81{
-      padding-bottom: 0 !important;
-      margin-bottom: 4px !important;
-      font-size: 12px !important;
-      &>div{
-        padding: 2px 10px !important;
-        font-size: 12px !important;
+
+  /** title 截取函数
+   * @param title
+   * 规则：截取前10个字符，
+   * 如果包含 ， 。 , . 等则截取到第一个符号之前的内容
+   */
+  function truncateTitle(title) {
+    // 使用正则表达式匹配第一个标点符号
+    const punctuationPattern = /[，。,.]/;
+    const match = title.match(punctuationPattern);
+
+    // 如果找到标点符号，截取到该符号之前的内容
+    if (match && match.index !== undefined) {
+      return title.substring(0, match.index);
+    }
+
+    // 如果没有标点符号，直接截取前10个字
+    return title.length > 10 ? title.substring(0, 10) : title;
+  }
+
+
+  function extractKeyPoints(question) {
+    const actionWords = ["如何", "怎么", "怎样", "怎么才能", "怎样才能", "为什么", "为何", "为什么会", "为何会", "为啥会", '请用', '请给',  '请帮', '请问', '请教', '请解', '请指出', '请说出'];
+    const targetWords = ["提高", "学习", "解决", "选择", "优化", "管理", "应对", "实现", "打造", "改善", "用来"];
+    const stopWords = ["的", "了", "吗", "呢", "啊", "呀",];
+
+    // 去除问题中的标点符号，去除常见疑问词（如“如何”）
+    let keyPhrase = question.replace(/[，。？！,.?\s]/g, "").replace(/导出$/g, "");
+    console.log("keyPhrase", keyPhrase);
+    for (const word of actionWords) {
+      if (keyPhrase.startsWith(word)) {
+        keyPhrase = keyPhrase.slice(word.length).trim();
+        break;
       }
     }
-}
-`;
-    dom.appendChild(style);
+    let filteredWords = keyPhrase.replace(/我们|我|你们|你/g, '').split(" "); // 第一人称和第二人称代词
+    let action = "";
+    let target = "";
+    for (const word of filteredWords) {
+      if (targetWords.includes(word)) {
+        action = word;
+      } else if (!stopWords.includes(word)) {
+        target = target ? `${target} ${word}` : word;
+      }
+    }
+    if (action && target) {
+      return `${action} ${target}`;
+    } else if (target) {
+      return target;
+    } else {
+      return keyPhrase; // 如果无法提取，返回原问题的简化版
+    }
   }
 
   function mergeImages(titleImgData, contentImgData, title) {
@@ -156,7 +218,7 @@ function addExportBtn() {
         // 保存图片 png 到下载
         const link = document.createElement('a');
         link.href = mergedImgData;
-        link.download = `deepseek_${title.slice(0, 10)}.png`;
+        link.download = `dp_${title}.png`;
         link.click();
 
       };
@@ -165,51 +227,51 @@ function addExportBtn() {
 
 
   // 拼接pdf
-  async function generatePDF(base64) {
-    const pdfDoc = await PDFLib.PDFDocument.create();
-
-    // 获取base64 宽高
-    const img = new Image();
-    img.src = base64;
-    let aspectRatio = img.width / img.height;
-
-
-    const pageWidth = 466;
-    const pageHeight = 1200;
-
-    let width, height;
-    if (pageWidth / aspectRatio <= pageHeight) {
-      width = pageWidth;
-      height = pageWidth / aspectRatio;
-    } else {
-      width = pageHeight * aspectRatio;
-      height = pageHeight;
-    }
-
-    let remainingHeight = img.height;
-    let yOffset = 0;
-
-    while (remainingHeight > 0) {
-      const page = pdfDoc.addPage();
-      const drawHeight = Math.min(height, remainingHeight);
-      page.drawImage(img, {
-        x: 12,
-        y: pageHeight - drawHeight - yOffset,
-        width: width,
-        height: drawHeight,
-      });
-
-      remainingHeight -= drawHeight;
-      yOffset += drawHeight;
-    }
-
-    const mergedPdfBytes = await pdfDoc.save();
-    const blob = new Blob([mergedPdfBytes], {type: 'application/pdf'});
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `down.pdf`;
-    link.click();
-  }
+  // async function generatePDF(base64) {
+  //   const pdfDoc = await PDFLib.PDFDocument.create();
+  //
+  //   // 获取base64 宽高
+  //   const img = new Image();
+  //   img.src = base64;
+  //   let aspectRatio = img.width / img.height;
+  //
+  //
+  //   const pageWidth = 466;
+  //   const pageHeight = 1200;
+  //
+  //   let width, height;
+  //   if (pageWidth / aspectRatio <= pageHeight) {
+  //     width = pageWidth;
+  //     height = pageWidth / aspectRatio;
+  //   } else {
+  //     width = pageHeight * aspectRatio;
+  //     height = pageHeight;
+  //   }
+  //
+  //   let remainingHeight = img.height;
+  //   let yOffset = 0;
+  //
+  //   while (remainingHeight > 0) {
+  //     const page = pdfDoc.addPage();
+  //     const drawHeight = Math.min(height, remainingHeight);
+  //     page.drawImage(img, {
+  //       x: 12,
+  //       y: pageHeight - drawHeight - yOffset,
+  //       width: width,
+  //       height: drawHeight,
+  //     });
+  //
+  //     remainingHeight -= drawHeight;
+  //     yOffset += drawHeight;
+  //   }
+  //
+  //   const mergedPdfBytes = await pdfDoc.save();
+  //   const blob = new Blob([mergedPdfBytes], {type: 'application/pdf'});
+  //   const link = document.createElement('a');
+  //   link.href = URL.createObjectURL(blob);
+  //   link.download = `down.pdf`;
+  //   link.click();
+  // }
 
   // loadCustomStyles()
   //
@@ -229,6 +291,7 @@ function addExportBtn() {
 
 
 addZoomBtn();
+
 // 向页面中增加一个缩小文字的按钮
 function addZoomBtn() {
   const zoomBtn = document.createElement('button');
