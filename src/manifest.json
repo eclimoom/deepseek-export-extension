@@ -3,7 +3,7 @@
   "name": "DeepSeek截图 DeepSeek导出图片",
   "description": "DeepSeek,DeepSeek截图, DeepSeek导出图片, DeepSeek缩放字号, 保存为图片",
 
-  "version": "1.0.2",
+  "version": "1.0.3",
   "permissions": ["activeTab", "scripting"],
   "content_scripts": [{
     "matches": ["https://chat.deepseek.com/*"],

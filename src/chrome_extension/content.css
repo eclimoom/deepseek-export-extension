@@ -1,7 +1,8 @@
 .deep-min-moom * {
-  --ds-md-zoom: 0.95 !important;
-  --ds-font-size-m: 12px !important;
+  --ds-md-zoom: 0.96 !important;
+  --ds-font-size-m: 13px !important;
   --ds-line-height-m: 16px !important;
+  --ds-font-size-l: 14px !important;
 
   .ds-markdown {
     min-height: 16px !important;

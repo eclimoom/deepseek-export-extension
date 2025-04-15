@@ -35,7 +35,7 @@ function addExportBtn() {
 
   // 获取编辑按钮
   const btns = [...document.querySelectorAll('.ds-icon-button:nth-of-type(1)')].filter((item) => {
-    return item.parentElement.querySelectorAll(".ds-icon-button").length === 2 && item.parentElement.parentElement.querySelectorAll('.export-pdf').length === 0;
+    return item.parentElement.querySelectorAll(".ds-icon-button").length === 1 && item.parentElement.querySelectorAll(".ds-button").length === 1 && item.parentElement.parentElement.querySelectorAll('.export-pdf').length === 0;
   });
 
 
@@ -58,10 +58,11 @@ function addExportBtn() {
 
 // 点击事件处理
   async function handleClick(evt) {
-    let title = evt.target.parentElement;
+    let title = evt.target.parentElement.parentElement;
     let content = title.parentElement.nextElementSibling;
-    content.lastChild.style.display = 'none';
-
+    if (content) {
+      content.lastChild.style.display = 'none';
+    }
     try {
       const titleCanvas = await html2canvas(title, {
         useCORS: true,
