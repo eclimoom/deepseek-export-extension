@@ -34,7 +34,7 @@ function addExportBtn() {
 
 
   // 获取编辑按钮
-  const btns = [...document.querySelectorAll('.ds-icon-button:nth-of-type(1)')].filter((item) => {
+  let btns = [...document.querySelectorAll('.ds-icon-button:nth-of-type(1)')].filter((item) => {
     return item.parentElement.querySelectorAll(".ds-icon-button").length === 1 && item.parentElement.querySelectorAll(".ds-button").length === 1 && item.parentElement.parentElement.querySelectorAll('.export-pdf').length === 0;
   });
 
@@ -44,6 +44,15 @@ function addExportBtn() {
   exportBtn.className = 'ds-moom-btn ds-export-moom-btn export-pdf'
   exportBtn.innerHTML = downImgSvg + '导出';
 
+
+
+  if(btns.length < 1 ) {
+    btns = [...document.querySelectorAll('.ds-icon-button:nth-of-type(1)')].filter((item) => {
+      return item.parentElement.querySelectorAll(".ds-icon-button").length === 2 && item.parentElement.parentElement.querySelectorAll('.export-pdf').length === 0;
+    });
+  }
+
+  console.log('btns', btns);
 
   // 插入导出按钮
   btns.forEach(btn => {
@@ -58,7 +67,7 @@ function addExportBtn() {
 
 // 点击事件处理
   async function handleClick(evt) {
-    let title = evt.target.parentElement.parentElement;
+    let title = evt.target.parentElement || evt.target.parentElement.parentElement;
     let content = title.parentElement.nextElementSibling;
     if (content) {
       content.lastChild.style.display = 'none';
