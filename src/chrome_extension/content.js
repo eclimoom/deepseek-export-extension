@@ -52,7 +52,13 @@ function addExportBtn() {
     });
   }
 
-  console.log('btns', btns);
+  if(btns.length < 1) {
+    btns = document.querySelectorAll('.fbb737a4 .ds-icon-button');
+    console.log('dom结构已变化, classname 未发生变化');
+  }
+
+  // title class fbb737a4 _9663006
+  // console.log('btns', btns);
 
   // 插入导出按钮
   btns.forEach(btn => {
