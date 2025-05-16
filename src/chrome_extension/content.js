@@ -73,11 +73,13 @@ function addExportBtn() {
 
 // 点击事件处理
   async function handleClick(evt) {
-    let title = evt.target.parentElement || evt.target.parentElement.parentElement;
+    console.log(111)
+    let title = evt.target.parentElement.parentElement;
     let content = title.parentElement.nextElementSibling;
-    if (content) {
-      content.lastChild.style.display = 'none';
+    if (!content) {
+      content = evt.target.parentElement.nextElementSibling;
     }
+    content.lastChild.style.display = 'none';
     try {
       const titleCanvas = await html2canvas(title, {
         useCORS: true,
