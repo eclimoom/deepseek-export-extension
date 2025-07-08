@@ -75,10 +75,11 @@ function addExportBtn() {
 
 // 点击事件处理
   async function handleClick(evt) {
-    let title = evt.target.parentElement.parentElement;
-    let content = title.parentElement.nextElementSibling;
+    let title = evt.target.parentElement.parentElement.parentElement;
+    console.log('title', title)
+    let content = title.nextElementSibling;
     if (!content) {
-      content = evt.target.parentElement.nextElementSibling;
+      content = evt.target.nextElementSibling;
     }
     content.lastChild.style.display = 'none';
     try {
@@ -120,11 +121,11 @@ function addExportBtn() {
 
     let styleStr = `
     .deep-min-moom * {
-      --ds-md-zoom: 0.95 !important;
-      --ds-font-size-m: 12px !important;
-      --ds-line-height-m: 16px !important;
+      --ds-md-zoom: 0.98 !important;
+      --ds-font-size-m: 14px !important;
+      --ds-line-height-m: 20px !important;
       .ds-markdown{
-        min-height: 16px !important;
+        min-height: 20px !important;
       }
       .ds-markdown h3{
         line-height: 1.3 !important;

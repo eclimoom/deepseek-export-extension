@@ -1,11 +1,20 @@
 .deep-min-moom * {
-  --ds-md-zoom: 0.97 !important;
-  --ds-font-size-m: 13px !important;
-  --ds-line-height-m: 16px !important;
+  --ds-md-zoom: 0.98 !important;
+  --ds-font-size-m: 14px !important;
+  --ds-line-height-m: 20px !important;
   --ds-font-size-l: 14px !important;
 
   .ds-markdown {
-    min-height: 16px !important;
+    min-height: 20px !important;
+  }
+  .markdown-table-wrapper th,.markdown-table-wrapper td {
+    padding: 5px 10px;
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .e1675d8b{
+    line-height: 22px !important;
   }
 
   .ds-markdown hr {
